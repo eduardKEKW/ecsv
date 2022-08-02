@@ -1,0 +1,70 @@
+# Shop\Product\ItemListing Related APIs
+
+extend type Query { 
+    getProductListing(
+        input: FilterProductListingInput @builder(method: "Webkul\\GraphQLAPI\\Queries\\Shop\\Product\\ProductListingQuery@getAll"),
+        first: Int,
+        page: Int
+    ): [Product!] @paginate(type: "paginator" defaultCount:10 model:"Webkul\\GraphQLAPI\\Models\\Catalog\\Product")
+    searchProduct(
+        input: SearchProductInput @builder(method: "Webkul\\GraphQLAPI\\Queries\\Shop\\Product\\ProductListingQuery@getSuggestions")
+        first: Int,
+        page: Int
+    ): [Product!] @paginate(type: "paginator" defaultCount:10 model:"Webkul\\GraphQLAPI\\Models\\Catalog\\Product")
+}
+
+input FilterableAttributes {
+    code: String!
+    values: [String]
+}  
+
+input PriceRange {
+    min: Int
+    max: Int
+}
+
+extend type ProductFlat {
+    reviewsCount: Int
+    averageRating: Float
+}
+
+enum SortValues {
+    Popular
+    Newest
+    Most Expensive
+    List Expensive
+    Reviews Count
+    Discount
+}
+
+type CategorySuggestion {
+    name: String
+    url: String
+}
+
+type Suggestion {
+    thumbnail: String
+    name: String
+    price: Float
+    specialPrice: Float
+    category: CategorySuggestion
+}
+
+type SuggestionResponse {
+    data: [Suggestion]
+}
+
+input SearchProductInput {
+    term: String
+}
+
+input FilterProductListingInput {
+    categoryId: Int
+    search: String
+    name: String
+    url_key: String
+    sort: SortValues
+    price: PriceRange
+    reviews: Int
+    attributes: [FilterableAttributes]
+}

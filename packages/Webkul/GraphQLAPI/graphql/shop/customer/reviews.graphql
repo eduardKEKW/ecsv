@@ -1,0 +1,96 @@
+#Shop\Customer\Reviews Related APIs
+extend type Query {
+    reviewsList(
+        input: CustomerReviewInput @builder(method: "Webkul\\GraphQLAPI\\Queries\\Shop\\Customer\\ReviewQuery@getReviews"),
+        first: Int,
+        page: Int
+    ): [Review!] @paginate(type: "paginator" defaultCount:10 model:"Webkul\\Product\\Models\\ProductReview")
+
+    reviewsInfo(
+        productId: Int
+    ): ReviewListReturnType @field(resolver: "Webkul\\GraphQLAPI\\Queries\\Shop\\Customer\\ReviewQuery@getRatings"),
+
+    reviewDetail(id: ID @eq): Review @field(resolver: "Webkul\\GraphQLAPI\\Mutations\\Shop\\Customer\\ReviewMutation@reviews")
+
+    userActivity (
+        input: UserActivityinput
+    ): userActivityType @field(resolver: "Webkul\\GraphQLAPI\\Mutations\\Shop\\Customer\\ReviewMutation@commentLikes")
+}
+
+extend type Mutation {
+    createReview(
+        input: CreateReviewInput!
+    ): CreateReviewResponse @field(resolver: "Webkul\\GraphQLAPI\\Mutations\\Shop\\Customer\\ReviewMutation@store")
+  
+    deleteReview(id: ID!): DeleteReviewResponse @field(resolver: "Webkul\\GraphQLAPI\\Mutations\\Shop\\Customer\\ReviewMutation@delete")
+
+    LikeReview(
+        commentId: ID
+    ): LikeReviewResponse @field(resolver: "Webkul\\GraphQLAPI\\Mutations\\Shop\\Customer\\ReviewMutation@like")
+}
+
+input UserActivityinput {
+    productId: Int
+}
+
+type StarsMap {
+    count: Int
+    rating: Float
+}
+
+type ReviewListReturnType {
+    averageRating: Float
+    starsMap: [StarsMap] 
+}
+
+input CreateReviewInput {
+    name: String
+    title: String!
+    rating: Int!
+    comment: String!
+    productId: ID! @rename(attribute: "product_id")
+}
+
+type CreateReviewResponse {
+    success: String
+    review: Review
+}
+
+enum ReviewsOrder {
+  POPULAR @enum(value: "popular")
+  NEWEST @enum(value: "newest")
+}
+
+input CustomerReviewInput {
+    id: Int
+    sort: String
+    order: ReviewsOrder
+    title: String
+    rating: Int
+    customerId: Int @rename(attribute: "customer_id")
+    customerName: String @rename(attribute: "customer_name")
+    productName: String @rename(attribute: "product_name")
+    productId: Int @rename(attribute: "product_id")
+    status: String
+}
+
+type LikeReviewResponse {
+    status: Boolean
+    message: String
+    review: Review
+}
+
+type CommentLike {
+    id: Int
+    reviewId: Int
+}
+
+type userActivityType {
+    commentLikes: [CommentLike]
+}
+
+type DeleteReviewResponse {
+    status: Boolean
+    message: String
+    reviews: [Review]
+}
