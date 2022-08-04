@@ -42,7 +42,6 @@
         "prettus/l5-repository": "^2.6",
         "tymon/jwt-auth": "1.0.x-dev",
         "ext-intl": "*"
-
     },
     "require-dev": {
         "codeception/codeception": "^4.1",
