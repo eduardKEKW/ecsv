@@ -24,6 +24,7 @@
         "vue-template-compiler": "^2.6.11"
     },
     "dependencies": {
-        "vee-validate": "^3.3.0"
+        "vee-validate": "^3.3.0",
+        "vercel": "^27.3.7"
     }
 }

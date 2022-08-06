@@ -9,7 +9,6 @@
     "type": "project",
     "require": {
         "php": "^7.3|^8.0",
-        "algolia/algoliasearch-client-php": "^2.2",
         "astrotomic/laravel-translatable": "^11.0.0",
         "aws/aws-sdk-php": "^3.171",
         "babenkoivan/elastic-scout-driver": "^1.1",
