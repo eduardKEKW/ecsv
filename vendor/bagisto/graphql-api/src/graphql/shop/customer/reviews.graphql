@@ -1,0 +1,50 @@
+#Shop\Customer\Reviews Related APIs
+extend type Query {
+    reviewsList(
+        input: CustomerReviewInput @builder(method: "Webkul\\GraphQLAPI\\Queries\\Shop\\Customer\\ReviewQuery@getReviews"),
+        first: Int,
+        page: Int
+    ): [Review!] @paginate(type: "paginator" defaultCount:10 model:"Webkul\\Product\\Models\\ProductReview")
+
+    reviewDetail(id: ID @eq): Review @field(resolver: "Webkul\\GraphQLAPI\\Mutations\\Shop\\Customer\\ReviewMutation@reviews")
+}
+
+extend type Mutation {
+    createReview(
+        input: CreateReviewInput!
+    ): CreateReviewResponse @field(resolver: "Webkul\\GraphQLAPI\\Mutations\\Shop\\Customer\\ReviewMutation@store")
+  
+    deleteReview(id: ID!): DeleteReviewResponse @field(resolver: "Webkul\\GraphQLAPI\\Mutations\\Shop\\Customer\\ReviewMutation@delete")
+}
+
+input CreateReviewInput {
+    name: String
+    title: String!
+    rating: Int!
+    comment: String!
+    productId: ID! @rename(attribute: "product_id")
+}
+
+type CreateReviewResponse {
+    success: String
+    review: Review
+}
+
+input CustomerReviewInput {
+    id: Int
+    sort: String
+    order: String
+    title: String
+    rating: Int
+    customerId: Int @rename(attribute: "customer_id")
+    customerName: String @rename(attribute: "customer_name")
+    productName: String @rename(attribute: "product_name")
+    productId: Int @rename(attribute: "product_id")
+    status: String
+}
+
+type DeleteReviewResponse {
+    status: Boolean
+    message: String
+    reviews: [Review]
+}
